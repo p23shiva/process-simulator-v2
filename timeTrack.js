@@ -132,12 +132,11 @@ incrementDayCounter = function() {
 incrementWeekCounter = function() {
 	++globalTimeKeeper.week;
 	clearInterval(simulationInterval);
-	clearInterval(frontendInterval);
 	
 	if(globalTimeKeeper.week==noOfWeeks+1) {
 		alert("simulation over!");
 		document.getElementById("runSimulation").disabled=true; 
-		clearInterval(simulationInterval); clearInterval(frontendInterval); triggerEndOfWeekFinancialsDialog(); return;} else {
+		clearInterval(simulationInterval); triggerEndOfWeekFinancialsDialog(); return;} else {
 			triggerEndOfWeekFinancialsDialog();
 			if(currCash<0){
 				alert("You are bankrupt! Simulation over.");

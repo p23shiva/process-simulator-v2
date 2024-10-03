@@ -443,7 +443,6 @@ win.document.write(generateInfoSnippet());
 		var triggerScheduler=document.getElementById("triggerScheduler");
 		triggerScheduler.onclick = function(){
 			clearInterval(simulationInterval);
-			clearInterval(frontendInterval);
 			schedulerModal.style.display="block";
 		}
 		// When the user clicks on the button, open the modal
@@ -750,27 +749,25 @@ win.document.write(generateInfoSnippet());
 
 		}
 simulationInterval=0;
-frontendInterval=0;
 		var runSimulation=document.getElementById("runSimulation");
 		runSimulation.onclick = function() {
+			if(simulationInterval) return;
 			scheduleCheck();
-			simulationInterval= setInterval(runMode,paces[currPace]);
-			frontendInterval = setInterval(FERefresh, 50);
+			simulationInterval= setInterval(()=>runMode(stepsArr[currPace]),paces[currPace]*stepsArr[currPace]);
 		}
 		pauseSimulation.onclick = function() {
 			clearInterval(simulationInterval);
-			clearInterval(frontendInterval);
+			simulationInterval =0;
 		}
 		var paces=[1000,500,250,125,50,25];
-		var FEpaces=[50,50,100,100,200,200];
+		var FEpaces=[1000,500,250,250,250,250];
+		var stepsArr = [1,1,1,2,6,13]
 		currPace=0;
 		paceDown.onclick = function() {
 			if(currPace>0){
 				clearInterval(simulationInterval);
-				clearInterval(frontendInterval);
 				currPace-=1;
-				simulationInterval=setInterval(runMode,paces[currPace]);
-				frontendInterval=setInterval(FERefresh,FEpaces[currPace]);
+				if(simulationInterval) simulationInterval=setInterval(()=>runMode(stepsArr[currPace]),paces[currPace]*stepsArr[currPace]);
 				updatePaceDisplay();
 			}
 		}
@@ -778,10 +775,8 @@ frontendInterval=0;
 		paceUp.onclick = function() {
 			if(currPace<5) {
 				clearInterval(simulationInterval);
-				clearInterval(frontendInterval);
 				currPace+=1;
-				simulationInterval=setInterval(runMode,paces[currPace]);
-				frontendInterval=setInterval(FERefresh,FEpaces[currPace]);
+				if(simulationInterval) simulationInterval=setInterval(()=>runMode(stepsArr[currPace]),paces[currPace]*stepsArr[currPace]);
 				updatePaceDisplay();
 			}
 		}
