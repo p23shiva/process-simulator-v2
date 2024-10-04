@@ -112,7 +112,7 @@ function FERefresh () {
 function runMode (steps){
 	if(!steps) steps =1;
 	for(walker=0;walker < steps; walker++){
-		console.log("current minute: "+counter);counter++;
+		//console.log("current minute: "+counter);counter++;
 		globalTimeKeeper.min+=1;
 		//if(Number.isInteger(globalTimeKeeper.min)){
 		incrementGlobalTimeKeeperMinutes();
@@ -379,6 +379,8 @@ var graphParser = function(processGraphMatrix) {
 			var xx=((position.x-xCoord1+20)/80).toFixed()/1;
 	       	if(wsEditable&&processGraph[xx][yy].isDummy==false && yy!=0&&yy!=len2-1){
 		        clearInterval(simulationInterval);
+				simulationInterval =0;
+				changeButtons(1);
 		        currWSBeingEditedx=xx;
 		        currWSBeingEditedy=yy;
 		        wsParamsModal.style.display="block";
@@ -388,10 +390,20 @@ var graphParser = function(processGraphMatrix) {
 	});
 }
 
+function changeButtons(key = 0){
+	//key =0 if strating simulation & key =1 if stopping simulation
+	hideElem = document.getElementById(key ? "pauseSimulation" : "runSimulation");
+	showElem = document.getElementById(!key ? "pauseSimulation" : "runSimulation");
+	hideElem.style.display = "none";
+	showElem.style.display = "inline-block";
+}
+
 currRMPurchasex=0;
 currRMPurchasey=0;
 rmPurchaseInitiate = function(id) {
 	clearInterval(simulationInterval);
+	simulationInterval =0;
+	changeButtons(1);
 	var x= id.split('-')[1];
 	var y= id.split('-')[2];
 	currRMPurchasey=y;
@@ -708,6 +720,7 @@ assignResourceToTask = function (ResourceCompObject,x1,y1,x2,y2){
 	        ResourceCompObject.setAttr('height', 50);
 	        layer.draw();
 	        if(x1>-1){
+				//picking resource from x1, y1
 	        	if(processGraph[x1][y1].productionMode==true){
 	        		for(var k=0;k<processGraph[x1][y1].childNodes.length;k++) {
 	        			processGraph[processGraph[x1][y1].childNodes[k][0]][processGraph[x1][y1].childNodes[k][1]].units+=1;
